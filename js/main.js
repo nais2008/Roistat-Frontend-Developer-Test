@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
+    // переменные
     const openModalButton = document.getElementById("open-modal");
     const closeModalButton = document.getElementById("close-modal");
     const modalWindow = document.getElementById("modal-window");
@@ -10,10 +11,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let users = JSON.parse(localStorage.getItem("users")) || [];
 
+    // сохраненение user
     const saveUsers = () => {
         localStorage.setItem("users", JSON.stringify(users));
     };
 
+    // созданием строки с пользователем
     const generateUserRow = (user, depth = 0) => {
         const row = document.createElement("tr");
         row.dataset.id = user.id;
@@ -32,6 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
         users.filter(u => !u.parentId).forEach(user => generateUserRow(user));
     };
 
+    // обновление select с выбором начальника
     const updateParentSelect = () => {
         parentUserSelect.innerHTML = '<option value="">-</option>';
         users.forEach(user => {
@@ -42,11 +46,13 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     };
 
+    // открытие модального окна
     openModalButton.onclick = () => {
         modalWindow.classList.remove("hidden");
         updateParentSelect();
     };
 
+    // закрытие модального окна
     closeModalButton.onclick = () => {
         modalWindow.classList.add("hidden");
     };
@@ -57,6 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
+    // сохранение данных
     userForm.onsubmit = (event) => {
         event.preventDefault();
         const userName = userNameInput.value;
