@@ -15,38 +15,42 @@
             Добавить
         </button>
         <table border="1">
-            <tr>
-                <th>Имя</th>
-                <th>Телефон</th>
-            </tr>
+            <thead>
+                <tr>
+                    <th>Имя</th>
+                    <th>Телефон</th>
+                    <th>Начальник</th>
+                </tr>
+            </thead>
+            <tbody id="userTable">
+                <!-- Rows will be added dynamically here -->
+            </tbody>
         </table>
     </main>
     <!-- Modal window -->
-     <div class="back-blur hidden" id="close-modal modal-window">
+     <div class="back-blur hidden" id="modal-window">
         <div class="modal-window">
             <header>
                 <h2>Добавление пользователя</h2>
                 <button id="close-modal">❌</button>
             </header>
-            <form action="">
+            <form id="userForm">
                 <div>
-                    <label for=""></label>
-                    <input type="text">
+                    <label for="name">Имя : </label>
+                    <input type="text" id="name" required>
                 </div>
                 <div>
-                    <label for=""></label>
-                    <input type="text">
+                    <label for="number">Телефон : </label>
+                    <input type="tel" id="number" required>
                 </div>
                 <div>
-                    <label for=""></label>
-                    <select name="" id=""></select>
+                    <label for="nach">Начальник : </label>
+                    <select id="nach">
+                        <option value="">-</option>
+                    </select>
                 </div>
                 <div>
-                    <label for=""></label>
-                    <select name="" id=""></select>
-                </div>
-                <div>
-                    <button>Сохранить</button>
+                    <button type="submit">Сохранить</button>
                 </div>
             </form>
          </div>

@@ -1,11 +1,83 @@
-// Modal window
-const btn_open_modal = document.querySelector('#open-modal');
-const btn_close_modal = document.querySelector('#close-modal');
-let modal_window = document.querySelector('.back-blur');
+document.addEventListener("DOMContentLoaded", () => {
+    const openModalButton = document.getElementById("open-modal");
+    const closeModalButton = document.getElementById("close-modal");
+    const modalWindow = document.getElementById("modal-window");
+    const userForm = document.getElementById("userForm");
+    const userNameInput = document.getElementById("name");
+    const userNumberInput = document.getElementById("number");
+    const parentUserSelect = document.getElementById("nach");
+    const userTable = document.getElementById("userTable");
 
-btn_open_modal.addEventListener('click', () => {
-    modal_window.classList.remove('hidden');
-});
-btn_close_modal.addEventListener('click', () => {
-    modal_window.classList.add('hidden');
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+
+    const saveUsers = () => {
+        localStorage.setItem("users", JSON.stringify(users));
+    };
+
+    const generateUserRow = (user, depth = 0) => {
+        const row = document.createElement("tr");
+        row.dataset.id = user.id;
+        row.innerHTML = `
+            <td style="padding-left: ${depth * 20}px;">${user.name}</td>
+            <td>${user.phone}</td>
+            <td>${user.parentName || ''}</td>
+        `;
+        userTable.appendChild(row);
+
+        users.filter(u => u.parentId === user.id).forEach(childUser => generateUserRow(childUser, depth + 1));
+    };
+
+    const refreshTable = () => {
+        userTable.innerHTML = "";
+        users.filter(u => !u.parentId).forEach(user => generateUserRow(user));
+    };
+
+    const updateParentSelect = () => {
+        parentUserSelect.innerHTML = '<option value="">-</option>';
+        users.forEach(user => {
+            const option = document.createElement("option");
+            option.value = user.id;
+            option.textContent = user.name;
+            parentUserSelect.appendChild(option);
+        });
+    };
+
+    openModalButton.onclick = () => {
+        modalWindow.classList.remove("hidden");
+        updateParentSelect();
+    };
+
+    closeModalButton.onclick = () => {
+        modalWindow.classList.add("hidden");
+    };
+
+    window.onclick = (event) => {
+        if (event.target === modalWindow) {
+            modalWindow.classList.add("hidden");
+        }
+    };
+
+    userForm.onsubmit = (event) => {
+        event.preventDefault();
+        const userName = userNameInput.value;
+        const userPhone = userNumberInput.value;
+        const parentUserId = parentUserSelect.value;
+        const parentUser = users.find(user => user.id === parentUserId);
+
+        const newUser = {
+            id: Date.now().toString(),
+            name: userName,
+            phone: userPhone,
+            parentId: parentUserId || null,
+            parentName: parentUser ? parentUser.name : null
+        };
+
+        users.push(newUser);
+        saveUsers();
+        refreshTable();
+        modalWindow.classList.add("hidden");
+        userForm.reset();
+    };
+
+    refreshTable();
 });
